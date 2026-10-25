@@ -1,122 +1,86 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import HeroCarousel from './components/HeroCarousel';
+import FAQSection from './components/FAQSection';
+import AgentChatWidget from './components/AgentChatWidget';
+import UserDashboard from './components/UserDashboard';
+import { Compass, Calendar, Star } from 'lucide-react';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [activeView, setActiveView] = useState('home');
+  const [plans, setPlans] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/plans')
+      .then((res) => res.json())
+      .then((data) => setPlans(data))
+      .catch((err) => console.error("Failed to load plans:", err));
+  }, []);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen flex flex-col font-sans bg-slate-50 text-slate-800">
+      <Navbar activeView={activeView} setActiveView={setActiveView} />
 
-      <div className="ticks"></div>
+      <main className="flex-1">
+        {activeView === 'home' && (
+          <>
+            <HeroCarousel onExploreClick={() => document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' })} />
+            <section id="destinations" className="py-20 max-w-7xl mx-auto px-6 w-full">
+              <div className="text-center max-w-2xl mx-auto mb-14">
+                <h2 className="text-3xl font-bold text-slate-900 mb-3">Popular Travel Packages</h2>
+                <p className="text-slate-600">
+                  Handcrafted experiences designed for memorable adventures. Ask our AI Travel Agent on the bottom right to reserve any package!
+                </p>
+              </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {plans.map((plan) => (
+                  <div key={plan.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs font-semibold uppercase text-sky-600 bg-sky-50 px-2.5 py-1 rounded-md">
+                          {plan.destination}
+                        </span>
+                        <div className="flex items-center text-amber-400 text-xs font-bold gap-1">
+                          <Star className="w-4 h-4 fill-amber-400" /> 4.9
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">{plan.title}</h3>
+                      <div className="flex items-center gap-4 text-xs text-slate-500 mb-4">
+                        <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {plan.duration}</span>
+                      </div>
+                      <ul className="text-xs text-slate-600 space-y-2 mb-6 flex-1">
+                        {plan.highlights.map((highlight, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-sky-500 rounded-full" />
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                          <span className="text-xs text-slate-400 block">Starting from</span>
+                          <span className="text-2xl font-black text-slate-900">${plan.price_per_person}</span>
+                          <span className="text-xs text-slate-500"> / person</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+            <FAQSection />
+          </>
+        )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {activeView === 'dashboard' && <UserDashboard />}
+      </main>
+
+      <AgentChatWidget />
+
+      <footer className="mt-auto bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-sm">
+        <p>© 2026 AgenticTravels. All rights reserved. Powered by LangGraph & Groq API.</p>
+      </footer>
+    </div>
+  );
 }
-
-export default App
