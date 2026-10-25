@@ -4,6 +4,7 @@ import HeroCarousel from './components/HeroCarousel';
 import FAQSection from './components/FAQSection';
 import AgentChatWidget from './components/AgentChatWidget';
 import UserDashboard from './components/UserDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import { Compass, Calendar, Star } from 'lucide-react';
 
 export default function App() {
@@ -74,6 +75,7 @@ export default function App() {
         )}
 
         {activeView === 'dashboard' && <UserDashboard />}
+        {activeView === 'admin' && <AdminDashboard />}
       </main>
 
       <AgentChatWidget />
