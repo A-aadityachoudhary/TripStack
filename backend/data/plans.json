@@ -1,0 +1,53 @@
+[
+  {
+    "id": "pkg-bali-01",
+    "destination": "Bali, Indonesia",
+    "title": "Tropical Paradise & Cultural Explorer",
+    "duration": "6 Days / 5 Nights",
+    "price_per_person": 850,
+    "highlights": ["Ubud Monkey Forest", "Tanah Lot Temple Sunset", "Nusa Penida Day Trip", "Private Villa with Pool"],
+    "itinerary": [
+      "Day 1: Arrival & Villa Check-in",
+      "Day 2: Ubud Culture & Sacred Monkey Forest",
+      "Day 3: Nusa Penida Island Speedboat & Snorkeling",
+      "Day 4: Mount Batur Sunrise Trek",
+      "Day 5: Spa & Tanah Lot Sunset Dinner",
+      "Day 6: Shopping & Departure"
+    ]
+  },
+  {
+    "id": "pkg-swiss-02",
+    "destination": "Swiss Alps, Switzerland",
+    "title": "Alpine Wonderland & Express Scenic Train",
+    "duration": "7 Days / 6 Nights",
+    "price_per_person": 1850,
+    "highlights": ["Glacier Express", "Jungfraujoch Top of Europe", "Lake Lucerne Cruise", "Interlaken Paragliding"],
+    "itinerary": [
+      "Day 1: Arrival in Zurich & Train to Lucerne",
+      "Day 2: Mt. Pilatus Golden Round Trip",
+      "Day 3: Scenic Train to Interlaken",
+      "Day 4: Jungfraujoch Excursion",
+      "Day 5: Zermatt & Matterhorn Views",
+      "Day 6: Glacier Express Journey",
+      "Day 7: Geneva Departure"
+    ]
+  },
+  {
+    "id": "pkg-tokyo-03",
+    "destination": "Tokyo & Kyoto, Japan",
+    "title": "Modern Metropolises & Timeless Temples",
+    "duration": "8 Days / 7 Nights",
+    "price_per_person": 1450,
+    "highlights": ["Shibuya Crossing", "Mt. Fuji Day Tour", "Shinkansen Bullet Train", "Kyoto Fushimi Inari Shrine"],
+    "itinerary": [
+      "Day 1: Arrive in Tokyo & Shinjuku Night Tour",
+      "Day 2: Senso-ji & Akihabara Exploration",
+      "Day 3: Mt. Fuji & Hakone Day Pass",
+      "Day 4: Shinkansen to Kyoto & Gion District",
+      "Day 5: Fushimi Inari & Arashiyama Bamboo Grove",
+      "Day 6: Day trip to Nara Park",
+      "Day 7: Return to Tokyo & Shopping",
+      "Day 8: Departure"
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "question": "What is the cancellation policy?",
+    "answer": "You can cancel up to 7 days before your trip start date for a full 100% refund."
+  },
+  {
+    "question": "Are international flights included in the packages?",
+    "answer": "Packages include local transfers, accommodation, and guided tours. International flights can be added upon request during AI booking."
+  },
+  {
+    "question": "How does the AI agent book my trip?",
+    "answer": "Our AI travel agent chats with you to collect your travel preferences, dates, number of guests, and selected destination, then automatically logs your reservation."
+  }
+]

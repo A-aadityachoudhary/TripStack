@@ -1,0 +1,26 @@
+[
+  {
+    "id": "hotel-bali-01",
+    "destination": "Bali, Indonesia",
+    "name": "Maya Ubud Resort & Spa",
+    "rating": 4.8,
+    "price_per_night": 160,
+    "amenities": ["Infinity Pool", "Free Breakfast", "Spa Center", "Airport Transfer", "Free Wi-Fi"]
+  },
+  {
+    "id": "hotel-swiss-01",
+    "destination": "Swiss Alps, Switzerland",
+    "name": "The Grand Hotel Zermatterhof",
+    "rating": 4.9,
+    "price_per_night": 320,
+    "amenities": ["Mountain View", "Heated Pool", "Ski Pass Desk", "Fine Dining Restaurant", "Spa"]
+  },
+  {
+    "id": "hotel-japan-01",
+    "destination": "Tokyo & Kyoto, Japan",
+    "name": "Hotel Gracery Shinjuku",
+    "rating": 4.6,
+    "price_per_night": 140,
+    "amenities": ["Central Location", "Godzilla Head View", "Buffet Breakfast", "High-speed Wi-Fi"]
+  }
+]
