@@ -1,11 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+dotenv.config();
 import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import { travelAgentApp } from './agent/travelGraph.js';
 import { readJson } from './utils/db.js';
 
-dotenv.config();
+
 
 const app = express();
 app.use(cors());
