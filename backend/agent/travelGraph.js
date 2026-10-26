@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { ChatGroq } from '@langchain/groq';
 import { StateGraph, MessagesAnnotation } from '@langchain/langgraph';
 import { ToolNode } from '@langchain/langgraph/prebuilt';
@@ -8,7 +9,7 @@ const tools = [getTripInfoTool, saveBookingTool];
 const toolNode = new ToolNode(tools);
 
 const model = new ChatGroq({
-  model: 'llama-3.3-70b-versatile',
+  model: 'openai/gpt-oss-120b',
   apiKey: process.env.GROQ_API_KEY,
   temperature: 0.3
 }).bindTools(tools);
