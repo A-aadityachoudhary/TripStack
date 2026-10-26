@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useUser } from '@clerk/clerk-react';
 import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import FAQSection from './components/FAQSection';
 import AgentChatWidget from './components/AgentChatWidget';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
-import { Compass, Calendar, Star } from 'lucide-react';
+import { Calendar, Star } from 'lucide-react';
 
 export default function App() {
   const [activeView, setActiveView] = useState('home');
   const [plans, setPlans] = useState([]);
+  
+  const { user, isSignedIn } = useUser();
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
+  const isAdmin = isSignedIn && userEmail === import.meta.env.VITE_ADMIN_EMAIL;
 
   useEffect(() => {
     fetch('http://localhost:5000/api/plans')
@@ -75,7 +80,17 @@ export default function App() {
         )}
 
         {activeView === 'dashboard' && <UserDashboard />}
-        {activeView === 'admin' && <AdminDashboard />}
+        
+        {/* Guarded Admin Dashboard */}
+        {activeView === 'admin' && (
+          isAdmin ? (
+            <AdminDashboard />
+          ) : (
+            <div className="p-12 text-center text-red-600 font-semibold text-lg">
+              Access Denied: Admin privileges required for this section.
+            </div>
+          )
+        )}
       </main>
 
       <AgentChatWidget />

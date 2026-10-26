@@ -10,7 +10,14 @@ import {
 
 export default function Navbar({ activeView, setActiveView }) {
   const { user } = useUser();
-  const isAdmin = user?.publicMetadata?.role === 'admin' || user?.primaryEmailAddress?.emailAddress?.includes('admin');
+
+  // Extract user's primary email address
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
+
+  // Grant admin access if role is set to 'admin' OR logged in with aadityach812@gmail.com
+  const isAdmin =
+    user?.publicMetadata?.role === 'admin' ||
+    userEmail === 'aadityach812@gmail.com';
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">

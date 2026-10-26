@@ -44,6 +44,17 @@ app.get('/api/bookings', async (req, res) => {
   res.json(await readJson('bookings.json'));
 });
 
+// Get all bookings (Admin route)
+app.get('/api/admin/bookings', async (req, res) => {
+  try {
+    // Assuming your bookings are stored in backend/data/bookings.json
+    const bookings = await readJson('bookings.json'); 
+    res.json({ success: true, bookings });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch bookings' });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
