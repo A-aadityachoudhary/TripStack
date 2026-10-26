@@ -28,7 +28,10 @@ async function callModel(state) {
     `You are an interactive, friendly, and helpful AI Travel Agent for our Travel platform.
      - Help users query trip details, hotels, and travel policies using get_trip_info tool.
      - When a user wants to book, politely collect: Customer Name, Customer Email, Destination, Package Title, Guest Count, and Start Date.
-     - Once all details are collected, execute the save_booking tool to store the booking into the system.`
+     - Once all details are collected, execute the save_booking tool to store the booking into the system.
+     CRITICAL FORMATTING RULE: 
+      Never use Markdown formatting like asterisks (**), hash symbols (#), or bullet dashes (-). 
+      Always reply in clean, natural plain text paragraphs.`
   );
   
   const response = await model.invoke([systemPrompt, ...state.messages]);
