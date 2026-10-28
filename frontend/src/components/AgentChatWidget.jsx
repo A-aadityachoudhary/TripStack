@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Sparkles, Loader2, User } from 'lucide-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 
 export default function AgentChatWidget() {
+  const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,13 +34,36 @@ export default function AgentChatWidget() {
     const newMessages = [...messages, { role: 'user', content: query }];
     setMessages(newMessages);
     if (!textToSend) setInput('');
+
+    // Guard check: Intercept request if user is not signed in
+    if (!isSignedIn) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Sorry buddy but you have to sign up or sign in first.'
+        }
+      ]);
+      return;
+    }
+
     setLoading(true);
+
+    // Extract logged-in user email and name from Clerk
+    const userEmail = user?.primaryEmailAddress?.emailAddress;
+    const userName = user?.fullName || user?.firstName || 'Traveler';
 
     try {
       const response = await fetch('http://localhost:5000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ history: newMessages })
+        body: JSON.stringify({ 
+          history: newMessages,
+          userInfo: {
+            email: userEmail,
+            name: userName
+          }
+        })
       });
 
       const data = await response.json();
@@ -129,7 +155,7 @@ export default function AgentChatWidget() {
           {messages.length <= 2 && (
             <div className="px-3 py-2 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto text-xs">
               <button
-                onClick={() => handleSend("I want to book the Bali package for 2 guests starting Nov 10")}
+                onClick={() => handleSend("I want to book the Bali package")}
                 className="bg-slate-100 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-full whitespace-nowrap transition cursor-pointer"
               >
                 🏝️ Book Bali Package

@@ -15,13 +15,19 @@ app.use(express.json());
 // API route to send messages to the LangGraph Agent
 app.post('/api/chat', async (req, res) => {
   try {
-    const { history } = req.body; 
+    const { history, userInfo } = req.body;
+
     // Convert incoming history array into LangChain BaseMessages
-    const formattedMessages = history.map(msg => 
+    const formattedMessages = (history || []).map(msg => 
       msg.role === 'user' ? new HumanMessage(msg.content) : new AIMessage(msg.content)
     );
 
-    const result = await travelAgentApp.invoke({ messages: formattedMessages });
+    // Pass both formatted messages and userInfo into the state graph
+    const result = await travelAgentApp.invoke({ 
+      messages: formattedMessages,
+      userInfo: userInfo || { email: 'Not provided', name: 'Valued Customer' }
+    });
+
     const lastMessage = result.messages[result.messages.length - 1];
 
     res.json({ reply: lastMessage.content });
