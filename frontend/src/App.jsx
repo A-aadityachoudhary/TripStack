@@ -7,6 +7,7 @@ import AgentChatWidget from './components/AgentChatWidget';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { Calendar, Star } from 'lucide-react';
+import { Mail} from 'lucide-react';
 
 export default function App() {
   const [activeView, setActiveView] = useState('home');
@@ -95,9 +96,33 @@ export default function App() {
 
       <AgentChatWidget />
 
-      <footer className="mt-auto bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-sm">
-        <p>© 2026 AgenticTravels. All rights reserved. Powered by LangGraph & Groq API.</p>
-      </footer>
+      <footer className="mt-auto bg-slate-900 text-slate-400 py-6 sm:py-8 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-center sm:text-left">
+        
+        {/* Copyright & Brand */}
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-slate-300 font-medium">
+          <span>© 2026</span>
+          <span className="text-sky-400 font-semibold">TripStack</span>
+          <span className="hidden sm:inline">•</span>
+          <span className="block sm:inline w-full sm:w-auto text-slate-400 sm:text-slate-300">
+            By Aaditya Choudhary
+          </span>
+        </div>
+
+        {/* Contact Link */}
+        <div className="flex items-center justify-center">
+          <a
+            href="mailto:aadityach812@gmail.com"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/50 sm:bg-transparent text-slate-300 hover:text-sky-400 hover:bg-slate-800 transition cursor-pointer"
+            title="Send an Email"
+          >
+            <Mail className="w-4 h-4 text-sky-400 shrink-0" />
+            <span className="break-all sm:break-normal">aadityach812@gmail.com</span>
+          </a>
+        </div>
+
+      </div>
+    </footer>
     </div>
   );
 }

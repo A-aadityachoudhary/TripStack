@@ -3,22 +3,30 @@ import { ChevronDown, HelpCircle } from 'lucide-react';
 
 const faqs = [
   {
-    question: "How does the AI Travel Agent book my trip?",
-    answer: "Our AI travel agent chats with you in real time at the bottom-right corner. It answers package questions, collects your preferred travel dates and guest details, and automatically logs your booking into our system."
+    "question": "How does the AI Travel Agent book my trip?",
+    "answer": "Our AI travel agent chats with you in real time at the bottom-right corner. It answers package questions, collects your preferred travel start date and guest count, validates package availability in our catalog, and automatically links the reservation to your signed-in Clerk account."
   },
   {
-    question: "What is the cancellation and refund policy?",
-    answer: "You can cancel up to 7 days before your trip start date for a full 100% refund with no hidden charges."
+    "question": "What is the policy for modifying or changing a booking?",
+    "answer": "You can modify your booking details (such as travel dates or guest count) directly through the AI chat widget or your dashboard, provided the request is made at least 24 hours prior to your scheduled trip start date."
   },
   {
-    question: "Are international flight tickets included in packages?",
-    answer: "Packages cover luxury accommodations, ground transportation, local transfers, and guided tours. Flights can be customized during the AI booking consultation."
+    "question": "How far in advance can I book a trip?",
+    "answer": "You can book trips for any future date up to 6 months from today. Bookings for past dates or beyond the 6-month window cannot be processed."
   },
   {
-    question: "Can I customize an existing package or hotel preference?",
-    answer: "Yes! Simply tell our AI agent your preferred room type, hotel rating, or specific activities during your chat."
+    "question": "What is the cancellation and refund policy?",
+    "answer": "You can cancel up to 7 days before your trip start date for a full 100% refund with no hidden charges. Cancellations requested within 24 hours of departure are non-refundable."
+  },
+  {
+    "question": "Are international flight tickets included in packages?",
+    "answer": "Our packages cover luxury accommodations, ground transportation, local transfers, and guided tours. Flights can be customized during your AI booking consultation."
+  },
+  {
+    "question": "Can I customize an existing package or hotel preference?",
+    "answer": "Yes! Simply tell our AI agent your preferred room type, hotel rating, or specific activities during your chat to tailor your package."
   }
-];
+]
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(null);

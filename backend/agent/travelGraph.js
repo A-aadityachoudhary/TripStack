@@ -3,9 +3,9 @@ import { ChatGroq } from '@langchain/groq';
 import { StateGraph, Annotation, MessagesAnnotation } from '@langchain/langgraph';
 import { ToolNode } from '@langchain/langgraph/prebuilt';
 import { SystemMessage } from '@langchain/core/messages';
-import { getTripInfoTool, saveBookingTool } from './tools.js';
+import { getTripInfoTool, saveBookingTool, getUserBookingsTool, updateBookingTool} from './tools.js';
 
-const tools = [getTripInfoTool, saveBookingTool];
+const tools = [getTripInfoTool, saveBookingTool, getUserBookingsTool, updateBookingTool];
 const toolNode = new ToolNode(tools);
 
 const model = new ChatGroq({

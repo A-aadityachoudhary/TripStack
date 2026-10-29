@@ -20,26 +20,64 @@ export const getTripInfoTool = tool(
 // Tool 2: Book trip and persist into bookings.json
 export const saveBookingTool = tool(
   async ({ customerName, customerEmail, destination, packageTitle, guests, startDate }) => {
-    const bookings = await readJson('bookings.json');
-    const newBooking = {
-      id: `bk-${Date.now()}`,
-      customerName,
-      customerEmail,
-      destination,
-      packageTitle,
-      guests,
-      startDate,
-      createdAt: new Date().toISOString(),
-      status: 'Confirmed'
-    };
+    try {
+      // 1. Catalog Validation: Check if package/destination exists in plans.json
+      const plans = await readJson('plans.json');
+      const isValidPlan = plans.some(plan => 
+        (plan.title && plan.title.toLowerCase().includes(packageTitle.toLowerCase())) ||
+        (plan.destination && plan.destination.toLowerCase().includes(destination.toLowerCase())) ||
+        (packageTitle && packageTitle.toLowerCase().includes(plan.title?.toLowerCase()))
+      );
 
-    bookings.push(newBooking);
-    await writeJson('bookings.json', bookings);
-    return `Booking successfully created! Reference ID: ${newBooking.id}`;
+      if (!isValidPlan) {
+        return "Sorry, I can't book your trip because this package or destination is not available in our catalog.";
+      }
+
+      // 2. Date Validation: Past date check & 6-month limit check
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize time
+
+      const tripStartDate = new Date(startDate);
+      tripStartDate.setHours(0, 0, 0, 0);
+
+      // If trip start date is in the past
+      if (tripStartDate < today) {
+        return "Sorry I can't book your trip for this date.";
+      }
+
+      // If trip start date is more than 6 months from today
+      const sixMonthsFromNow = new Date();
+      sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
+      sixMonthsFromNow.setHours(0, 0, 0, 0);
+
+      if (tripStartDate > sixMonthsFromNow) {
+        return "Sorry I can't book your trip for this date.";
+      }
+
+      // 3. Save Booking
+      const bookings = await readJson('bookings.json');
+      const newBooking = {
+        id: `bk-${Date.now()}`,
+        customerName,
+        customerEmail,
+        destination,
+        packageTitle,
+        guests,
+        startDate,
+        createdAt: new Date().toISOString(),
+        status: 'Confirmed'
+      };
+
+      bookings.push(newBooking);
+      await writeJson('bookings.json', bookings);
+      return `Booking successfully created! Reference ID: ${newBooking.id}`;
+    } catch (error) {
+      return `Error creating booking: ${error.message}`;
+    }
   },
   {
     name: 'save_booking',
-    description: 'Saves a completed trip booking into the system once customer name, email, destination, guests, and start date are confirmed.',
+    description: 'Saves a completed trip booking into the system once customer name, email, destination, guests, and start date are confirmed. Fails if the package/destination is not in plans.json, or if the date is in the past/more than 6 months away.',
     schema: z.object({
       customerName: z.string().describe('Full name of the primary guest'),
       customerEmail: z.string().describe('Email address for booking updates'),
@@ -55,18 +93,43 @@ export const saveBookingTool = tool(
 export const getUserBookingsTool = tool(
   async ({ userEmail }) => {
     try {
-      const bookings = await readJson('bookings.json');
-      const userBookings = bookings.filter(
-        (b) => b.customerEmail?.toLowerCase() === userEmail?.toLowerCase()
-      );
-      
-      if (userBookings.length === 0) {
-        return JSON.stringify({ status: 'info', message: 'No active or past bookings found for this email.', bookings: [] });
+      console.log('🔍 Executing get_user_bookings for email:', userEmail);
+
+      if (!userEmail || userEmail === 'Not provided') {
+        return JSON.stringify({
+          status: 'error',
+          message: 'No valid user email provided from authentication session.'
+        });
       }
 
-      return JSON.stringify({ status: 'success', bookings: userBookings });
+      const bookings = await readJson('bookings.json');
+      console.log('📂 Total bookings in database:', bookings.length);
+
+      const userBookings = bookings.filter(
+        (b) => b.customerEmail && b.customerEmail.trim().toLowerCase() === userEmail.trim().toLowerCase()
+      );
+
+      console.log(`✅ Found ${userBookings.length} booking(s) for ${userEmail}`);
+
+      if (userBookings.length === 0) {
+        return JSON.stringify({
+          status: 'info',
+          message: `No active or past bookings found for ${userEmail}.`,
+          bookings: []
+        });
+      }
+
+      return JSON.stringify({
+        status: 'success',
+        userEmail,
+        bookings: userBookings
+      });
     } catch (error) {
-      return JSON.stringify({ status: 'error', message: 'Failed to retrieve user bookings.' });
+      console.error('❌ Error reading bookings:', error);
+      return JSON.stringify({
+        status: 'error',
+        message: `Failed to retrieve user bookings: ${error.message}`
+      });
     }
   },
   {
@@ -89,6 +152,26 @@ export const updateBookingTool = tool(
         return `Error: Booking with ID ${bookingId} was not found.`;
       }
 
+      const bookingToUpdate = bookings[bookingIndex];
+
+      // Current time and original trip start date
+      const now = new Date();
+      const tripStartDate = new Date(bookingToUpdate.startDate);
+
+      // 1. If the trip start date is already in the past (e.g., trip was June 10, 2025 and today is after June 10)
+      if (tripStartDate < now) {
+        return "Sorry but now you can't change the booking.";
+      }
+
+      // 2. Calculate hours remaining until the trip starts
+      const timeDiffInMs = tripStartDate.getTime() - now.getTime();
+      const hoursUntilTrip = timeDiffInMs / (1000 * 60 * 60);
+
+      // Check if time remaining is less than 24 hours (1 day)
+      if (hoursUntilTrip < 24) {
+        return "Sorry but now you can't change the booking.";
+      }
+
       // Update fields if provided
       if (guests !== undefined) {
         bookings[bookingIndex].guests = guests;
@@ -107,7 +190,7 @@ export const updateBookingTool = tool(
   },
   {
     name: 'update_booking',
-    description: 'Updates details such as guest count or start date for an existing booking using its booking ID.',
+    description: 'Updates details such as guest count or start date for an existing booking using its booking ID, only if the trip start date is in the future and at least 24 hours away.',
     schema: z.object({
       bookingId: z.string().describe('The reference ID of the booking to update (e.g., bk-17123456789)'),
       guests: z.number().optional().describe('New total count of guests'),

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Sparkles, Loader2, User } from 'lucide-react';
+import { Bot, X, Send, Loader2, User } from 'lucide-react';
+import { BotMessageSquare } from 'lucide-react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 
 export default function AgentChatWidget() {
@@ -92,17 +93,19 @@ export default function AgentChatWidget() {
       {isOpen && (
         <div className="w-[360px] sm:w-[400px] h-[520px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden mb-4 transition-all duration-300">
           {/* Header */}
-          <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+          <div className="bg-white text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-sky-500/20 border border-sky-400 flex items-center justify-center text-sky-400">
-                <Bot className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-full bg-sky-500/10 border border-sky-300 flex items-center justify-center text-sky-600 shadow-sm">
+                <BotMessageSquare className="w-5 h-5 stroke-[2.2]" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold flex items-center gap-1.5">
-                  AI Travel Agent <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <h3 className="text-sm font-semibold flex items-center gap-1">
+                  <span className="text-sky-600">Trip</span>
+                  <span className="text-slate-900">Stack</span>
+                  <span className="text-slate-500 font-normal ml-0.5">Agent</span>
                 </h3>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Online | LangGraph Powered
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> By Aaditya Choudhary
                 </span>
               </div>
             </div>
@@ -123,7 +126,7 @@ export default function AgentChatWidget() {
               >
                 {msg.role === 'assistant' && (
                   <div className="w-7 h-7 rounded-full bg-sky-600 flex items-center justify-center text-white shrink-0 mt-0.5">
-                    <Bot className="w-4 h-4" />
+                    <BotMessageSquare className="w-4 h-4" />
                   </div>
                 )}
                 <div
@@ -198,10 +201,17 @@ export default function AgentChatWidget() {
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 bg-sky-600 hover:bg-sky-700 text-white px-4 py-3 rounded-full shadow-xl transition transform hover:scale-105 cursor-pointer"
+        className="relative flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-sky-600 to-sky-500 hover:from-sky-700 hover:to-sky-600 text-white rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 cursor-pointer border border-sky-400/30"
+        aria-label="Open AI Travel Agent Chat"
       >
-        <Bot className="w-6 h-6" />
-        <span className="font-semibold text-sm hidden sm:inline">Ask AI Agent</span>
+        {/* Upgraded AI Bot Icon */}
+        <BotMessageSquare className="w-7 h-7 stroke-[2.2]" />
+
+        {/* Online Status Indicator Dot */}
+        <span className="absolute top-1 right-1 flex h-3.5 w-3.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white"></span>
+        </span>
       </button>
     </div>
   );
